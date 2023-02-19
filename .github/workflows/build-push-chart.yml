@@ -1,0 +1,66 @@
+name: Build/Push Image and Release Charts
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "chart/ms-validate-user/Chart.yaml"
+      - "chart/ms-validate-user/values.yaml"
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Set Convenience Env Vars
+        id: env
+        run: |
+          echo "CHART_VERSION=10.0.${{ github.run_number }}" >> $GITHUB_ENV
+          echo "IMAGE_VERSION=10.0.${{ github.run_number }}-g$(echo ${{ github.sha }} | cut -c 1-6)" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${{ github.head_ref || github.ref_name }}-v10.0.${{ github.run_number }}-g$(echo ${{ github.sha }} | cut -c 1-6)" >> $GITHUB_ENV
+
+      - name: Configure Git
+        id: git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Update Values and Chart
+        id: chart
+        run: |
+            sudo go install github.com/mikefarah/yq/v4@latest
+            yq e '.image.repository |= "${{ env.REGISTRY }}/${{ github.repository }}"' -i chart/${{ github.event.repository.name }}/values.yaml
+            yq e '.image.tag |= "${{ env.IMAGE_TAG }}"' -i chart/${{ github.event.repository.name }}/values.yaml
+            yq e '.image.sha |= "${{ steps.build.outputs.digest }}"' -i chart/${{ github.event.repository.name }}/values.yaml
+            yq e '.version |= "${{ env.CHART_VERSION }}"' -i chart/${{ github.event.repository.name }}/Chart.yaml
+            yq e '.appVersion |= "${{ env.CHART_VERSION }}"' -i chart/${{ github.event.repository.name }}/Chart.yaml
+            echo "DIGEST=${{ steps.build.outputs.digest }}" >> $GITHUB_ENV
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Update chart and values
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.10.0
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.4.1
+        with:
+          charts_dir: chart
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Trigger Rebuild of Main Chart
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: generate-main-chart.yml
+          repo: ortelius/ortelius-charts
+          token: ${{ secrets.HELM_INDEXER_TOKEN }}
