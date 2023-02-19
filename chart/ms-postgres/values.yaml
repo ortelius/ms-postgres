@@ -1,5 +1,5 @@
 replicaCount: 1
 image:
   repository: /ortelius/ms-postgres
-  tag: main-v10.0.1-gcec6bc
+  tag: main-v10.0.2-g0c8250
   sha: ""
