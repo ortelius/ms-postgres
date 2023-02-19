@@ -1,12 +1,12 @@
-name: Build/Push Image and Release Charts
+name: Build and Release Charts
 
 on:
   push:
     branches:
       - main
     paths-ignore:
-      - "chart/ms-validate-user/Chart.yaml"
-      - "chart/ms-validate-user/values.yaml"
+      - "chart/ms-postgres/Chart.yaml"
+      - "chart/ms-postgres/values.yaml"
 jobs:
   release:
     runs-on: ubuntu-latest
