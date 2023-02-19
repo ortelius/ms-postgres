@@ -21,8 +21,6 @@ jobs:
         id: env
         run: |
           echo "CHART_VERSION=10.0.${{ github.run_number }}" >> $GITHUB_ENV
-          echo "IMAGE_VERSION=10.0.${{ github.run_number }}-g$(echo ${{ github.sha }} | cut -c 1-6)" >> $GITHUB_ENV
-          echo "IMAGE_TAG=${{ github.head_ref || github.ref_name }}-v10.0.${{ github.run_number }}-g$(echo ${{ github.sha }} | cut -c 1-6)" >> $GITHUB_ENV
 
       - name: Configure Git
         id: git
@@ -34,12 +32,8 @@ jobs:
         id: chart
         run: |
             sudo go install github.com/mikefarah/yq/v4@latest
-            yq e '.image.repository |= "${{ env.REGISTRY }}/${{ github.repository }}"' -i chart/${{ github.event.repository.name }}/values.yaml
-            yq e '.image.tag |= "${{ env.IMAGE_TAG }}"' -i chart/${{ github.event.repository.name }}/values.yaml
-            yq e '.image.sha |= "${{ steps.build.outputs.digest }}"' -i chart/${{ github.event.repository.name }}/values.yaml
             yq e '.version |= "${{ env.CHART_VERSION }}"' -i chart/${{ github.event.repository.name }}/Chart.yaml
             yq e '.appVersion |= "${{ env.CHART_VERSION }}"' -i chart/${{ github.event.repository.name }}/Chart.yaml
-            echo "DIGEST=${{ steps.build.outputs.digest }}" >> $GITHUB_ENV
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
