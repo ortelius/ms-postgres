@@ -1,15 +1,24 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Retain
+---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: postgres-pv
 spec:
-  storageClassName: manual
+  storageClassName: local-storage
   capacity:
     storage: 1Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
     path: {{ .Values.hostPath | default "/tmp/postgres" }}
+    type:  DirectoryOrCreate
   persistentVolumeReclaimPolicy: Retain
 ---
 apiVersion: v1
@@ -17,7 +26,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: postgres-pvc
 spec:
-  storageClassName: manual
+  storageClassName: local-storage
   accessModes:
     - ReadWriteOnce
   resources:
