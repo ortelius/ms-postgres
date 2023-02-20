@@ -22,26 +22,11 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 5432
-          env:
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: pgcred
-                  key: DBUserName
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: pgcred
-                  key: DBPassword
-            - name: POSTGRES_DB
-              valueFrom:
-                secretKeyRef:
-                  name: pgcred
-                  key: DBName
           volumeMounts:
-          - name: postgres-pv
+          - name: postgres-data
             mountPath: /var/lib/postgresql/data
       volumes:
-      - name: postgres-pv
-        persistentVolumeClaim:
-          claimName: postgres-pvc
+      - name: postgres-data
+        hostPath:
+          path: {{ .Values.hostPath | default "/tmp/postgres" }}
+          type: DirectoryOrCreate
