@@ -3,6 +3,7 @@ kind: PersistentVolume
 metadata:
   name: postgres-pv
 spec:
+  storageClassName: manual
   capacity:
     storage: 1Gi
   accessModes:
@@ -16,9 +17,11 @@ kind: PersistentVolumeClaim
 metadata:
   name: postgres-pvc
 spec:
+  storageClassName: manual
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
+  volumeName: postgres-pv
 ---
