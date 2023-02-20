@@ -39,9 +39,9 @@ spec:
                   name: pgcred
                   key: DBName
           volumeMounts:
-          - name: postgres-pv
+          - name: pgdata
             mountPath: /var/lib/postgresql/data
       volumes:
-      - name: postgres-pv
-        persistentVolumeClaim:
-          claimName: postgres-pvc
+        - name: pgdata
+          hostPath:
+            path: /pgdata  # matches kind containerPath in Kind Cluster.yaml
