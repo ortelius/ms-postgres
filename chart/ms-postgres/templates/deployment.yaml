@@ -44,5 +44,4 @@ spec:
       volumes:
         - name: pgdata
           hostPath:
-            type: DirectoryOrCreate
             path: /pgdata  # matches kind containerPath in Kind Cluster.yaml
