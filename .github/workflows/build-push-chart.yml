@@ -22,7 +22,7 @@ jobs:
       - name: Set Convenience Env Vars
         id: env
         run: |
-          echo "CHART_VERSION=10.0.${{ github.run_number }}" >> $GITHUB_ENV
+          echo "CHART_VERSION=10.0.${{ github.run_number }}" >> "$GITHUB_ENV"
 
       - name: Configure Git
         id: git
@@ -33,9 +33,9 @@ jobs:
       - name: Update Values and Chart
         id: chart
         run: |
-            sudo go install github.com/mikefarah/yq/v4@latest
-            yq e '.version |= "${{ env.CHART_VERSION }}"' -i chart/${{ github.event.repository.name }}/Chart.yaml
-            yq e '.appVersion |= "${{ env.CHART_VERSION }}"' -i chart/${{ github.event.repository.name }}/Chart.yaml
+          sudo go install github.com/mikefarah/yq/v4@latest
+          yq e '.version |= "${{ env.CHART_VERSION }}"' -i chart/${{ github.event.repository.name }}/Chart.yaml
+          yq e '.appVersion |= "${{ env.CHART_VERSION }}"' -i chart/${{ github.event.repository.name }}/Chart.yaml
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
