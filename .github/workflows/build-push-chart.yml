@@ -34,6 +34,8 @@ jobs:
       gh_handle: ${{ needs.setenv.outputs.gh_handle }}
       chart: chart/${{ needs.setenv.outputs.compname }}
       chart_version: ${{ needs.setenv.outputs.chart_version }}
+      image_repository: postgres
+      image_tag: 12.14-alpine3.17
     secrets:
       GPG_KEYRING_BASE64: ${{ secrets.GPG_KEYRING_BASE64 }}
       GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
