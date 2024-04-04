@@ -1,5 +1,6 @@
 # Configuration file for MegaLinter
 # See all available variables at https://megalinter.io/configuration/ and in linters documentation
+# force build
 
 APPLY_FIXES: all # all, none, or list of linter keys
 
