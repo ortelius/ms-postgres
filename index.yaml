@@ -2,6 +2,17 @@ apiVersion: v1
 entries:
   ms-postgres:
   - apiVersion: v2
+    appVersion: 10.0.158
+    created: "2024-09-13T18:12:44.780280067Z"
+    description: Dependency Packages
+    digest: b7932835aef1233a74772a54662efae8a9f270a168556e4cff14eed7c33fe041
+    icon: https://ortelius.github.io/ortelius-charts/logo.png
+    name: ms-postgres
+    type: application
+    urls:
+    - https://github.com/ortelius/ms-postgres/releases/download/ms-postgres-10.0.158/ms-postgres-10.0.158.tgz
+    version: 10.0.158
+  - apiVersion: v2
     appVersion: 10.0.156
     created: "2024-09-12T16:40:49.345280239Z"
     description: Dependency Packages
@@ -683,4 +694,4 @@ entries:
     urls:
     - https://github.com/ortelius/ms-postgres/releases/download/ms-postgres-10.0.2/ms-postgres-10.0.2.tgz
     version: 10.0.2
-generated: "2024-09-12T16:40:49.344955244Z"
+generated: "2024-09-13T18:12:44.779956981Z"
