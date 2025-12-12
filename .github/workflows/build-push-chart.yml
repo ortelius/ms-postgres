@@ -15,7 +15,7 @@ name: Build/Push Image and Release Charts
 permissions: read-all
 jobs:
   setenv:
-    uses: ortelius/workflow-toolkit/.github/workflows/env-config-workflow.yml@174d28736938eb3215d59243802dd1088256107b
+    uses: ortelius/workflow-toolkit/.github/workflows/env-config-workflow.yml@f43901e177db491c2f111dd7518f867edfdc1c25
     with:
       gh_head_ref: ${{ github.head_ref }}
       gh_ref_name: ${{ github.ref_name }}
@@ -26,7 +26,7 @@ jobs:
   helm:
     permissions:
       contents: write
-    uses: ortelius/workflow-toolkit/.github/workflows/helm-release-workflow.yml@174d28736938eb3215d59243802dd1088256107b
+    uses: ortelius/workflow-toolkit/.github/workflows/helm-release-workflow.yml@f43901e177db491c2f111dd7518f867edfdc1c25
     needs:
       - setenv
     with:
